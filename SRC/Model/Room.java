@@ -1,4 +1,4 @@
-package HotelManager.SRC.Model;
+package SRC.Model;
 
 public class Room {
 
