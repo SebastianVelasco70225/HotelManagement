@@ -1,4 +1,4 @@
-package HotelManager.SRC.View;
+package SRC.View;
 
 public class Main {
     
