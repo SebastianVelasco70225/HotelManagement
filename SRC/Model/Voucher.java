@@ -5,7 +5,7 @@ public class Voucher {
     private Booking booking;
     
     // Constructores
-    public Voucher(int number, Booking booking){
+    public Voucher(Booking booking){
         setBooking(booking);
         setNumber();
     }

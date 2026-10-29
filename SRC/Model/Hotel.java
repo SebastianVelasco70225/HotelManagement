@@ -1,4 +1,5 @@
 package SRC.Model;
+import java.util.List;
 
 public class Hotel {
 
@@ -7,19 +8,19 @@ public class Hotel {
     private int id;
     private String name;
     private String adress;
-    private int floorCount;
-    private Room [] rooms;
+    private int totalFloor;
+    private List<Room> rooms;
     private float tbh, tcs, tmi, pvm, rcp, TCD1, TCD2, TPA, RVM, RPI, TBA;
-    private Booking [] booking;
-    private Guest [] guest;
+    private List<Booking> bookings;
+    private List<Guest> guests;
+    private List<Voucher> vouchers;
     // Constructor
 
-    public Hotel(int id, String name, String adress, int floorCount, Room [] rooms, float tbh, float tcs, float tmi, float pvm, float rcp){
+    public Hotel(int id, String name, String adress, int totalFloor, float tbh, float tcs, float tmi, float pvm, float rcp){
         setId(id);
         setName(name);
         setAdress(adress);
-        setFloorCount(floorCount);
-        setRooms(rooms);
+        setTotalFloor(totalFloor);
         setTbh(tbh);
         setTcs(tcs);
         setTmi(tmi);
@@ -32,6 +33,16 @@ public class Hotel {
     
     // Metodos
     
+    // Comprobación de ID único
+    private boolean idExists(int idRoom) {
+        for (Room r : this.rooms) {
+            if (r.getId() == idRoom) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int getId() {
         return id;
     }
@@ -56,24 +67,20 @@ public class Hotel {
         this.adress = adress;
     }
     
-    public int getFloorCount() {
-        return floorCount;
+    public int getTotalFloor(){
+        return totalFloor;
     }
     
-    public void setFloorCount(int floorCount) {
-        if (comprobation(floorCount)) {
-            this.floorCount = floorCount;
+    public void setTotalFloor(int totalFloor) {
+        if (comprobation(totalFloor)) {
+            this.totalFloor = totalFloor;
             return;
         }
         throw new IllegalArgumentException("El número de pisos debe ser positivo");
     }
     
-    public Room [] getRooms() {
+    public List<Room> getRooms() {
         return rooms;
-    }
-    
-    public void setRooms(Room [] rooms) {
-        this.rooms = rooms;
     }
     
     public float getTbh() {
@@ -197,23 +204,64 @@ public class Hotel {
         TBA= tbh + RPI + RVM + rcp;
     }
     
-    public Booking[] getBooking() {
-        return booking;
+    public List<Booking> getBooking() {
+        return bookings;
     }
 
-    public void setBooking(Booking[] booking) {
-        this.booking = booking;
+    public void setBooking(List<Booking> bookings) {
+        this.bookings = bookings;
     }
 
-    public Guest[] getGuest() {
-        return guest;
+    public List<Guest> getGuests() {
+        return guests;
     }
 
-    public void setGuest(Guest[] guest) {
-        this.guest = guest;
+    public void setGuest(List<Guest> guests) {
+        this.guests = guests;
     }
 
     public boolean comprobation(float price){
         return price>0;
+    }
+
+    public RoomIndividual createIndividualRoom(int id, boolean lookSea, int floor, boolean tvPremiun) {
+        if (idExists(id)) {
+            throw new IllegalArgumentException("Ya existe una habitación con el ID: " + id);
+        }
+        RoomIndividual room = new RoomIndividual(this, id, lookSea, floor, tvPremiun);
+        this.rooms.add(room);
+        return room;
+    }
+
+    public RoomDouble createDoubleRoom(int id, boolean lookSea, int floor, boolean tvPremiun) {
+        if (idExists(id)) {
+            throw new IllegalArgumentException("Ya existe una habitación con el ID: " + id);
+        }
+        RoomDouble room = new RoomDouble(this, id, lookSea, floor, tvPremiun);
+        this.rooms.add(room);
+        return room;
+    }
+
+    public RoomFamily createFamilyRoom(int id, boolean lookSea, int floor, int camaSimple, boolean tvPremiun) {
+        if (idExists(id)) {
+            throw new IllegalArgumentException("Ya existe una habitación con el ID: " + id);
+        }
+        RoomFamily room = new RoomFamily(this, id, lookSea, floor, camaSimple, tvPremiun);
+        this.rooms.add(room);
+        return room;
+    }
+
+    public Suite createSuite(int id, boolean lookSea, int floor) {
+        if (idExists(id)) {
+            throw new IllegalArgumentException("Ya existe una habitación con el ID: " + id);
+        }
+        Suite room = new Suite(this, id, lookSea, floor);
+        this.rooms.add(room);
+        return room;
+    }
+
+    public Booking createBooking(Guest responsableGuest, int id, Room room, int guestCount, int nightCount){
+        
+        return Booking;
     }
 }

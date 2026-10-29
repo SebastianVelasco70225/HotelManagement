@@ -8,7 +8,7 @@ public class Booking {
     private int nightCount;
     private String state;
     private float price;
-    
+   
     //Constructor
     public Booking(Guest responsableGuest, int id, Room room, int guestCount, int nightCount){
         setResponsableGuest(responsableGuest);
@@ -17,6 +17,7 @@ public class Booking {
         setGuestCount(guestCount);
         setNightCount(nightCount);
         setState("Pendiente");
+        Voucher voucher= new Voucher(this);
     }
 
     //Métodos
@@ -52,6 +53,8 @@ public class Booking {
     public void setGuestCount(int guestCount) {
         if (guestCount<0||guestCount==0){
             throw new IllegalArgumentException("El número de huéspedes debe ser mayor a 0");
+        } else if (guestCount>room.getAbility()) {
+            throw new IllegalArgumentException("La cantidad de huéspedes excede la capacidad de la habitación");
         }
         this.guestCount = guestCount;
     }
@@ -83,7 +86,38 @@ public class Booking {
         return price;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setPrice(float tbh, float tcs, float tmi, float pvm, float rcp, float TCD1, float TCD2, float TPA, float RVM, float RPI, float TBA) {
+        switch (room.getType()) {
+            case "Habitacion individual":
+                    price=TBA+tcs;
+                    break;
+            case "Habitacion Doble":
+                if (guestCount==1) {
+                    price=TBA+TCD1;
+                    return;
+                } 
+                price=TBA+TCD2;
+                break;
+            case "Habitacion Family":
+                if (guestCount<7) {
+                    price=TBA+(TCD2*2)+(tcs*2);
+                    return;
+                }
+                price=TBA+(TCD2*2)+(tcs*2)+tcs*(70/100);
+                break;
+            case "Suite":
+                price=TBA+TCD2+tmi;
+                break;
+            default:
+                throw new IllegalArgumentException("No existe ese tipo de habitación");
+        }
+    }
+
+    public void changeState(boolean confirmation){
+        if(confirmation){
+            state="Confirmada";
+            return;
+        }
+        state="Cancelada";
     }
 }
